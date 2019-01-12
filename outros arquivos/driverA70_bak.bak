@@ -1,0 +1,96 @@
+
+#define sce       PIN_c0 //
+#define rst       PIN_c1 // 
+#define dc        PIN_a5 // 
+#define sclk      PIN_c3 // 
+#define sda       PIN_c5 //
+
+void SendCommand(BYTE Command);
+void WriteDisplay(BYTE Value);
+void Reset_LCD(void);
+void ClearDisplay(void);
+void Init_LCD(void);
+void GotoLineRow(BYTE Line, BYTE Row);
+
+long i;
+
+
+void lcd_write(char dados){
+  char i;
+  for (i=8;i>0;i--) {
+    output_low(sclk);
+    delay_us(2);
+    if ((dados&0x80)==0){output_low(sda);}
+    else {output_high(sda);}
+    output_high(sclk);
+    dados=dados<<1;
+  }
+}
+
+void Reset_LCD(void)
+{
+  delay_us(10);
+  output_bit(sda, 0);
+  output_bit(sclk, 0);
+  output_bit(dc, 0);
+  delay_us(10);
+  output_bit(rst, 1);
+  delay_us(10);
+  output_bit(sce, 0);
+  delay_us(10);
+  output_bit(rst, 0);
+  delay_us(10);  
+  output_bit(rst, 1);
+  output_bit(sce, 1);
+}
+
+void Init_LCD(void)
+{
+  Reset_LCD();
+
+  SendCommand(0x21);  // Function set: extended instruction set
+  SendCommand(0x14);  // Bias System
+  SendCommand(0x0A);  // HV-gen stages
+  SendCommand(0x05);  // Temperature Control
+  SendCommand(0xCC);  // Contrast: 204
+  SendCommand(0x20);  // Function set: standard instruction set
+  SendCommand(0x11);  // VLCD programming range: high
+  SendCommand(0x0C);  // Display control: normal (inverted = 0x0D)
+  
+}   
+
+
+void ClearDisplay(void){
+  GotoLineRow(0,0);
+  for (i=0; i<814; i++){ // eigentlich 101*64/8 aber Display-SOC 
+                                       // unterstützt 0..101, also 102 Spalten pro Zeile 
+    WriteDisplay(0x00);                 // es sind aber nur 101 Spalten vorhanden!
+  }
+}
+void GotoLineRow(BYTE Line, BYTE Row) // Line: 0..7, Row 0..101;
+{   
+  SendCommand( 0b00101000);
+  SendCommand((0b01000000 + Line));
+  SendCommand((0b10000000 + Row ));
+}
+
+void SendCommand(BYTE Command){
+  output_bit(sda, 0);
+  output_bit(sclk, 0);
+  output_bit(dc, 0);
+  output_bit(sce, 0);
+  
+  lcd_write(Command);
+  
+  output_bit(sce, 1);
+}
+void WriteDisplay(BYTE Value){          
+  output_bit(sda, 0);
+  output_bit(sclk, 0);
+  output_bit(dc, 1);
+  output_bit(sce, 0);
+
+  lcd_write(Value);
+  output_bit(sce, 1);
+}
+

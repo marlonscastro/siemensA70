@@ -1,0 +1,46 @@
+
+ROM used: 280 (1%)
+          280 (1%) including unused fragments
+
+          0 Average locations per line
+          4 Average locations per statement
+
+RAM used: 6 (0%) at main() level
+          9 (0%) worst case
+
+Stack used: 2 worst case (out of 31 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   24     1   1  main.c
+  461     0   0  C:\Program Files\PICC\devices\18F4550.h
+  121    69  99  a70_lcd.c
+----- -----
+  606    70 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     86  15   0   275  1.4  Reset_LCD
+0    106  19   3   540  5.9  SendCommand
+0     60  11   0   214  1.8  Init_LCD
+0     24   4   2    27  1.2  MAIN
+
+Program metrics:
+    Functions               4
+    Statements              70
+    Comments                143
+    Volume (V)              1402
+    Difficilty (D)          10.3
+    Effort to implement (E) 14510
+    Time to implement (T)   13 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   2
+    Maintainability (MI)    102
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-07FFE   276  32488  
+
+
+

@@ -1,0 +1,31 @@
+*** Error 18 "main.c" Line 20(10,23): File can not be opened
+    Not in "C:\Arquivos de programas\PICC\devices\avr/sleep.h"
+    Not in "C:\Arquivos de programas\PICC\drivers\avr/sleep.h"
+    Not in project "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\avr\sleep.h"
+    Not in local "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\avr\sleep.h"
+*** Error 18 "main.c" Line 21(10,31): File can not be opened
+    Not in "C:\Arquivos de programas\PICC\devices\compat/deprecated.h"
+    Not in "C:\Arquivos de programas\PICC\drivers\compat/deprecated.h"
+    Not in project "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\compat\deprecated.h"
+    Not in local "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\compat\deprecated.h"
+*** Error 18 "main.c" Line 22(10,26): File can not be opened
+    Not in "C:\Arquivos de programas\PICC\devices\avr/pgmspace.h"
+    Not in "C:\Arquivos de programas\PICC\drivers\avr/pgmspace.h"
+    Not in project "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\avr\pgmspace.h"
+    Not in local "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\avr\pgmspace.h"
+*** Error 18 "main.c" Line 23(10,22): File can not be opened
+    Not in "C:\Arquivos de programas\PICC\devices\inttypes.h"
+    Not in "C:\Arquivos de programas\PICC\drivers\inttypes.h"
+    Not in project "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\inttypes.h"
+*** Error 18 "main.c" Line 24(10,27): File can not be opened
+    Not in "C:\Arquivos de programas\PICC\devices\avr/interrupt.h"
+    Not in "C:\Arquivos de programas\PICC\drivers\avr/interrupt.h"
+    Not in project "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\avr\interrupt.h"
+    Not in local "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\avr\interrupt.h"
+*** Error 18 "main.c" Line 25(10,20): File can not be opened
+    Not in "C:\Arquivos de programas\PICC\devices\avr/io.h"
+    Not in "C:\Arquivos de programas\PICC\drivers\avr/io.h"
+    Not in project "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\avr\io.h"
+    Not in local "F:\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\LCD_A70_per_UART\avr\io.h"
+*** Error 128 "C:\Arquivos de programas\PICC\drivers\stdint.h" Line 23(1,2): A #DEVICE required before this line
+      7 Errors,  0 Warnings.

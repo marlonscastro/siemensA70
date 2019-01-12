@@ -1,0 +1,450 @@
+CCS PCH C Compiler, Version 4.114, 93460303               24-jun-13 20:53
+
+               Filename: D:\SkyDrive\Eletronica\PROJETOS PIC CCS\LCD SIEMENS A70 LCD\main.lst
+
+               ROM used: 370 bytes (1%)
+                         Largest free fragment is 32398
+               RAM used: 4 (0%) at main() level
+                         9 (0%) worst case
+               Stack:    3 locations
+
+*
+0000:  GOTO   0130
+.................... #include <18F4550.h> 
+.................... //////// Standard Header file for the PIC18F4550 device //////////////// 
+.................... #device PIC18F4550 
+.................... #list 
+....................  
+.................... #device adc=8 
+.................... #use delay(clock=48000000) 
+0004:  CLRF   FEA
+0006:  MOVLW  06
+0008:  MOVWF  FE9
+000A:  MOVF   FEF,W
+000C:  BZ    002A
+000E:  MOVLW  0F
+0010:  MOVWF  01
+0012:  CLRF   00
+0014:  DECFSZ 00,F
+0016:  BRA    0014
+0018:  DECFSZ 01,F
+001A:  BRA    0012
+001C:  MOVLW  8F
+001E:  MOVWF  00
+0020:  DECFSZ 00,F
+0022:  BRA    0020
+0024:  NOP   
+0026:  DECFSZ FEF,F
+0028:  BRA    000E
+002A:  RETLW  00
+.................... #fuses HSPLL, PLL4, CPUDIV1, PUT, NOWDT, NOBROWNOUT, NOLVP 
+....................  
+.................... #include "driverA52.c" 
+.................... /*#define sce    PIN_B0 // Chip Enable 
+.................... #define dc     PIN_B1 // Data Command LOW: Cmd; HIGH: Data; 
+.................... #define sda    PIN_B2 // Data 
+.................... #define sclk   PIN_B3 // Clock 
+.................... #define rst    PIN_B4 // RESET (Active Low)*/ 
+....................  
+.................... #define sce        PIN_B0 // 
+.................... #define rst        PIN_B1 //  
+.................... #define dc         PIN_B2 //  
+.................... #define sclk       PIN_B3 //  
+.................... #define sda        PIN_B4 // 
+....................  
+.................... #define CMD      0 
+.................... #define DATA     1 
+....................  
+....................  
+.................... #ifndef ON 
+.................... #define ON           1 
+.................... #endif 
+....................  
+.................... #ifndef OFF 
+.................... #define OFF          0 
+.................... #endif 
+....................  
+.................... void Lcd_Clear(void); 
+.................... void Lcd_Init(void); 
+.................... void Lcd_Write(int1 cd,unsigned char c); 
+.................... void Gotoxy(char x,char y); 
+....................  
+.................... const int8 FONT[51][5] ={0x00, 0x00, 0x00, 0x00, 0x00, // SPACE 
+....................                          0x00, 0x00, 0x5F, 0x00, 0x00, // ! 
+....................                          0x00, 0x03, 0x00, 0x03, 0x00, // " 
+....................                          0x14, 0x3E, 0x14, 0x3E, 0x14, // # 
+....................                          0x24, 0x2A, 0x7F, 0x2A, 0x12, // $ 
+....................                          0x43, 0x33, 0x08, 0x66, 0x61, // % 
+....................                          0x36, 0x49, 0x55, 0x22, 0x50, // & 
+....................                          0x00, 0x05, 0x03, 0x00, 0x00, // ' 
+....................                          0x00, 0x1C, 0x22, 0x41, 0x00, // ( 
+....................                          0x00, 0x41, 0x22, 0x1C, 0x00, // ) 
+....................                          0x14, 0x08, 0x3E, 0x08, 0x14, // * 
+....................                          0x08, 0x08, 0x3E, 0x08, 0x08, // + 
+....................                          0x00, 0x50, 0x30, 0x00, 0x00, // , 
+....................                          0x08, 0x08, 0x08, 0x08, 0x08, // - 
+....................                          0x00, 0x60, 0x60, 0x00, 0x00, // . 
+....................                          0x20, 0x10, 0x08, 0x04, 0x02, // / 
+....................                          0x3E, 0x51, 0x49, 0x45, 0x3E, // 0 
+....................                          0x00, 0x04, 0x02, 0x7F, 0x00, // 1 
+....................                          0x42, 0x61, 0x51, 0x49, 0x46, // 2 
+....................                          0x22, 0x41, 0x49, 0x49, 0x36, // 3 
+....................                          0x18, 0x14, 0x12, 0x7F, 0x10, // 4 
+....................                          0x27, 0x45, 0x45, 0x45, 0x39, // 5 
+....................                          0x3E, 0x49, 0x49, 0x49, 0x32, // 6 
+....................                          0x01, 0x01, 0x71, 0x09, 0x07, // 7 
+....................                          0x36, 0x49, 0x49, 0x49, 0x36, // 8 
+....................                          0x26, 0x49, 0x49, 0x49, 0x3E, // 9 
+....................                          0x00, 0x36, 0x36, 0x00, 0x00, // : 
+....................                          0x00, 0x56, 0x36, 0x00, 0x00, // ; 
+....................                          0x08, 0x14, 0x22, 0x41, 0x00, // < 
+....................                          0x14, 0x14, 0x14, 0x14, 0x14, // = 
+....................                          0x00, 0x41, 0x22, 0x14, 0x08, // > 
+....................                          0x02, 0x01, 0x51, 0x09, 0x06, // ? 
+....................                          0x3E, 0x41, 0x59, 0x55, 0x5E, // @ 
+....................                          0x7E, 0x09, 0x09, 0x09, 0x7E, // A 
+....................                          0x7F, 0x49, 0x49, 0x49, 0x36, // B 
+....................                          0x3E, 0x41, 0x41, 0x41, 0x22, // C 
+....................                          0x7F, 0x41, 0x41, 0x41, 0x3E, // D 
+....................                          0x7F, 0x49, 0x49, 0x49, 0x41, // E 
+....................                          0x7F, 0x09, 0x09, 0x09, 0x01, // F 
+....................                          0x3E, 0x41, 0x41, 0x49, 0x3A, // G 
+....................                          0x7F, 0x08, 0x08, 0x08, 0x7F, // H 
+....................                          0x00, 0x41, 0x7F, 0x41, 0x00, // I 
+....................                          0x30, 0x40, 0x40, 0x40, 0x3F, // J 
+....................                          0x7F, 0x08, 0x14, 0x22, 0x41, // K 
+....................                          0x7F, 0x40, 0x40, 0x40, 0x40, // L 
+....................                          0x7F, 0x02, 0x0C, 0x02, 0x7F, // M 
+....................                          0x7F, 0x02, 0x04, 0x08, 0x7F, // N 
+....................                          0x3E, 0x41, 0x41, 0x41, 0x3E, // O 
+....................                          0x7F, 0x09, 0x09, 0x09, 0x06, // P 
+....................                          0x1E, 0x21, 0x21, 0x21, 0x5E, // Q 
+....................                          0x7F, 0x09, 0x09, 0x09, 0x76};// R 
+....................  
+.................... const int8 FONT2[44][5]={0x26, 0x49, 0x49, 0x49, 0x32, // S 
+....................                          0x01, 0x01, 0x7F, 0x01, 0x01, // T 
+....................                          0x3F, 0x40, 0x40, 0x40, 0x3F, // U 
+....................                          0x1F, 0x20, 0x40, 0x20, 0x1F, // V 
+....................                          0x7F, 0x20, 0x10, 0x20, 0x7F, // W 
+....................                          0x41, 0x22, 0x1C, 0x22, 0x41, // X 
+....................                          0x07, 0x08, 0x70, 0x08, 0x07, // Y 
+....................                          0x61, 0x51, 0x49, 0x45, 0x43, // Z 
+....................                          0x00, 0x7F, 0x41, 0x00, 0x00, // [ 
+....................                          0x02, 0x04, 0x08, 0x10, 0x20, // \ 
+....................                          0x00, 0x00, 0x41, 0x7F, 0x00, // ] 
+....................                          0x00, 0x07, 0x05, 0x07, 0x00, // ° (degree) 
+....................                          0x40, 0x40, 0x40, 0x40, 0x40, // _ 
+....................                          0x00, 0x01, 0x02, 0x04, 0x00, // ` 
+....................                          0x20, 0x54, 0x54, 0x54, 0x78, // a 
+....................                          0x7F, 0x44, 0x44, 0x44, 0x38, // b 
+....................                          0x38, 0x44, 0x44, 0x44, 0x44, // c 
+....................                          0x38, 0x44, 0x44, 0x44, 0x7F, // d 
+....................                          0x38, 0x54, 0x54, 0x54, 0x18, // e 
+....................                          0x04, 0x04, 0x7E, 0x05, 0x05, // f 
+....................                          0x08, 0x54, 0x54, 0x54, 0x3C, // g 
+....................                          0x7F, 0x08, 0x04, 0x04, 0x78, // h 
+....................                          0x00, 0x44, 0x7D, 0x40, 0x00, // i 
+....................                          0x20, 0x40, 0x44, 0x3D, 0x00, // j 
+....................                          0x7F, 0x10, 0x28, 0x44, 0x00, // k 
+....................                          0x00, 0x41, 0x7F, 0x40, 0x00, // l 
+....................                          0x7C, 0x04, 0x78, 0x04, 0x78, // m 
+....................                          0x7C, 0x08, 0x04, 0x04, 0x78, // n 
+....................                          0x38, 0x44, 0x44, 0x44, 0x38, // o 
+....................                          0x7C, 0x14, 0x14, 0x14, 0x08, // p 
+....................                          0x08, 0x14, 0x14, 0x14, 0x7C, // q 
+....................                          0x00, 0x7C, 0x08, 0x04, 0x04, // r 
+....................                          0x48, 0x54, 0x54, 0x54, 0x20, // s 
+....................                          0x04, 0x04, 0x3F, 0x44, 0x44, // t 
+....................                          0x3C, 0x40, 0x40, 0x20, 0x7C, // u 
+....................                          0x1C, 0x20, 0x40, 0x20, 0x1C, // v 
+....................                          0x3C, 0x40, 0x30, 0x40, 0x3C, // w 
+....................                          0x44, 0x28, 0x10, 0x28, 0x44, // x 
+....................                          0x0C, 0x50, 0x50, 0x50, 0x3C, // y 
+....................                          0x44, 0x64, 0x54, 0x4C, 0x44, // z 
+....................                          0x00, 0x08, 0x36, 0x41, 0x41, // { 
+....................                          0x00, 0x00, 0x7F, 0x00, 0x00, // | 
+....................                          0x41, 0x41, 0x36, 0x08, 0x00, // } 
+....................                          0x02, 0x01, 0x02, 0x04, 0x02};// ~ 
+....................  
+.................... void Lcd_Clear(void){ 
+....................    unsigned long i; 
+....................    Lcd_Write(CMD,0x40); // Y = 0 
+*
+006A:  CLRF   07
+006C:  MOVLW  40
+006E:  MOVWF  08
+0070:  RCALL  002C
+....................    Lcd_Write(CMD,0x80); 
+0072:  CLRF   07
+0074:  MOVLW  80
+0076:  MOVWF  08
+0078:  RCALL  002C
+....................    for(i=0;i<918;i++) 
+007A:  CLRF   06
+007C:  CLRF   05
+007E:  MOVF   06,W
+0080:  SUBLW  03
+0082:  BNC   009C
+0084:  BNZ   008C
+0086:  MOVF   05,W
+0088:  SUBLW  95
+008A:  BNC   009C
+....................       Lcd_Write(DATA,0x00); 
+008C:  MOVLW  01
+008E:  MOVWF  07
+0090:  CLRF   08
+0092:  RCALL  002C
+0094:  INCF   05,F
+0096:  BTFSC  FD8.2
+0098:  INCF   06,F
+009A:  BRA    007E
+.................... } 
+009C:  GOTO   012C (RETURN)
+....................  
+.................... // Purpose:       Initialize the LCD. 
+.................... //                Call before using any other LCD function. 
+.................... void Lcd_Init(void){ 
+....................   output_low(sce); 
+00A0:  BCF    F93.0
+00A2:  BCF    F8A.0
+....................   output_low(rst); 
+00A4:  BCF    F93.1
+00A6:  BCF    F8A.1
+....................   delay_ms(10); 
+00A8:  MOVLW  0A
+00AA:  MOVWF  06
+00AC:  RCALL  0004
+....................   output_high(rst);  
+00AE:  BCF    F93.1
+00B0:  BSF    F8A.1
+....................   delay_ms(10); 
+00B2:  MOVLW  0A
+00B4:  MOVWF  06
+00B6:  RCALL  0004
+....................    
+....................   output_bit(sda, 0); 
+00B8:  BCF    F8A.4
+00BA:  BCF    F93.4
+....................   output_bit(sclk, 0); 
+00BC:  BCF    F8A.3
+00BE:  BCF    F93.3
+....................   output_bit(sce, 0); 
+00C0:  BCF    F8A.0
+00C2:  BCF    F93.0
+....................   output_bit(sda, 0); 
+00C4:  BCF    F8A.4
+00C6:  BCF    F93.4
+....................   output_bit(rst, 1); 
+00C8:  BSF    F8A.1
+00CA:  BCF    F93.1
+....................   output_bit(sce, 0); 
+00CC:  BCF    F8A.0
+00CE:  BCF    F93.0
+....................   output_bit(rst, 0); 
+00D0:  BCF    F8A.1
+00D2:  BCF    F93.1
+....................   output_bit(rst, 1); 
+00D4:  BSF    F8A.1
+00D6:  BCF    F93.1
+....................   output_bit(sce, 1); 
+00D8:  BSF    F8A.0
+00DA:  BCF    F93.0
+....................    
+....................   //Reset_LCD(); 
+....................  /* Lcd_Write(CMD, 0x21);    // Function set: chip is active, horizontal addressing, use extended instruction set 
+....................   Lcd_Write(CMD, 0xda);    //  
+....................   Lcd_Write(CMD, 0x14);    // Display control: ?     
+....................   Lcd_Write(CMD, 0x0b);    // Set voltage multiplier factor -> ok 
+....................   Lcd_Write(CMD, 0x05);    // Temperature controlVLCD temperature coefficient 1 
+....................   Lcd_Write(CMD, 0xd0);    // contrast 
+....................   Lcd_Write(CMD, 0x20);    // Function set 
+....................   Lcd_Write(CMD, 0x11);    // VLCD programming range: high 
+....................   Lcd_Write(CMD, 0x0c);    // Display control: normal */ 
+.................... //    SendCommand(0b00001101);    // Display control: inverse -> ok 
+....................    /*Lcd_Write(CMD, 0x21 ); // LCD Extended Commands. // 
+....................    Lcd_Write(CMD, 0xCF ); // Set LCD Vop (Contrast).// 
+....................    Lcd_Write(CMD, 0x06 ); // Set Temp coefficent. // 
+....................    Lcd_Write(CMD, 0x13 ); // LCD bias mode 1:48. // 
+....................    Lcd_Write(CMD, 0x28 ); // LCD Standard Commands,Horizontal addressing mode // 
+....................    Lcd_Write(CMD, 0x0C ); // LCD in normal mode.*/ 
+....................     
+....................   /* 
+....................     // LCD A52 A55 C55 OK  
+....................   Lcd_Write(CMD, 0x21); // PowerON, extended instruction set 
+....................   Lcd_Write(CMD, 0x09); // Internal HV-gen x3 
+....................   Lcd_Write(CMD, 0xe0); // Set Vop 
+....................   Lcd_Write(CMD, 0x15); // Bias n=2    //15 
+....................   Lcd_Write(CMD, 0x06); // Temperature coeff 2 
+....................   Lcd_Write(CMD, 0x20); // StandartCommandSet 
+....................   Lcd_Write(CMD, 0x0C); // normal mode, display non-inverted 
+....................   */ 
+....................    
+....................   Lcd_Write(CMD, 0x21);  // Function set: extended instruction set 
+00DC:  CLRF   07
+00DE:  MOVLW  21
+00E0:  MOVWF  08
+00E2:  RCALL  002C
+....................   Lcd_Write(CMD, 0x0A);  // HV-gen stages 
+00E4:  CLRF   07
+00E6:  MOVLW  0A
+00E8:  MOVWF  08
+00EA:  RCALL  002C
+....................   Lcd_Write(CMD, 0x14);  // Bias System 
+00EC:  CLRF   07
+00EE:  MOVLW  14
+00F0:  MOVWF  08
+00F2:  RCALL  002C
+....................   Lcd_Write(CMD, 0x05);  // Temperature Control 
+00F4:  CLRF   07
+00F6:  MOVLW  05
+00F8:  MOVWF  08
+00FA:  RCALL  002C
+....................   Lcd_Write(CMD, 0xCC);  // Contrast: 204 
+00FC:  CLRF   07
+00FE:  MOVLW  CC
+0100:  MOVWF  08
+0102:  RCALL  002C
+....................   Lcd_Write(CMD, 0x20);  // Function set: standard instruction set 
+0104:  CLRF   07
+0106:  MOVLW  20
+0108:  MOVWF  08
+010A:  RCALL  002C
+....................   Lcd_Write(CMD, 0x11);  // VLCD programming range: high 
+010C:  CLRF   07
+010E:  MOVLW  11
+0110:  MOVWF  08
+0112:  RCALL  002C
+....................   Lcd_Write(CMD, 0x0C);  // Display control: normal (inverted = 0x0D) 
+0114:  CLRF   07
+0116:  MOVLW  0C
+0118:  MOVWF  08
+011A:  RCALL  002C
+....................    
+....................   delay_ms(1000); 
+011C:  MOVLW  04
+011E:  MOVWF  05
+0120:  MOVLW  FA
+0122:  MOVWF  06
+0124:  RCALL  0004
+0126:  DECFSZ 05,F
+0128:  BRA    0120
+....................    
+....................   Lcd_Clear();    
+012A:  BRA    006A
+.................... } 
+012C:  GOTO   0146 (RETURN)
+....................  
+.................... // Purpose:    Write a byte of data to lcd 
+.................... // Inputs:     c - the byte of data to write 
+.................... void Lcd_Write(int1 CMD_DATA,unsigned char c){ 
+....................    int i; 
+....................    //output_low(sce); 
+....................    output_bit(dc,CMD_DATA); 
+*
+002C:  MOVF   07,F
+002E:  BNZ   0034
+0030:  BCF    F8A.2
+0032:  BRA    0036
+0034:  BSF    F8A.2
+0036:  BCF    F93.2
+....................    for(i=0;i<8;i++){ 
+0038:  CLRF   09
+003A:  MOVF   09,W
+003C:  SUBLW  07
+003E:  BNC   0068
+....................       output_low(sclk); 
+0040:  BCF    F93.3
+0042:  BCF    F8A.3
+....................       if((c & 0x80)) 
+0044:  BTFSS  08.7
+0046:  BRA    004E
+....................          output_high(sda); 
+0048:  BCF    F93.4
+004A:  BSF    F8A.4
+....................       else 
+004C:  BRA    0052
+....................          output_low(sda); 
+004E:  BCF    F93.4
+0050:  BCF    F8A.4
+....................       output_high(sclk); 
+0052:  BCF    F93.3
+0054:  BSF    F8A.3
+....................       c <<= 1; 
+0056:  BCF    FD8.0
+0058:  RLCF   08,F
+....................       delay_us(10); 
+005A:  MOVLW  27
+005C:  MOVWF  00
+005E:  DECFSZ 00,F
+0060:  BRA    005E
+0062:  BRA    0064
+....................    } 
+0064:  INCF   09,F
+0066:  BRA    003A
+....................    //output_high(sce); 
+.................... } 
+0068:  RETLW  00
+....................  
+.................... void Gotoxy(char x,char y){ 
+....................    Lcd_Write(CMD, (y | 0x40)); 
+....................    Lcd_Write(CMD, (x | 0x80)); 
+.................... } 
+....................  
+....................  
+....................  
+.................... void main(void){ 
+*
+0130:  CLRF   FF8
+0132:  BCF    FD0.7
+0134:  CLRF   FEA
+0136:  CLRF   FE9
+0138:  MOVF   FC1,W
+013A:  ANDLW  C0
+013C:  IORLW  0F
+013E:  MOVWF  FC1
+0140:  MOVLW  07
+0142:  MOVWF  FB4
+....................    Lcd_Init(); 
+0144:  BRA    00A0
+....................    Lcd_Write(DATA, 0xff); 
+0146:  MOVLW  01
+0148:  MOVWF  07
+014A:  MOVLW  FF
+014C:  MOVWF  08
+014E:  RCALL  002C
+....................    while(true){ 
+....................       output_high(pin_D1); 
+0150:  BCF    F95.1
+0152:  BSF    F8C.1
+....................       delay_ms(100); 
+0154:  MOVLW  64
+0156:  MOVWF  06
+0158:  RCALL  0004
+....................       output_low(pin_D1); 
+015A:  BCF    F95.1
+015C:  BCF    F8C.1
+....................       delay_ms(100); 
+015E:  MOVLW  64
+0160:  MOVWF  06
+0162:  RCALL  0004
+....................       Lcd_Write(DATA, 0xff); 
+0164:  MOVLW  01
+0166:  MOVWF  07
+0168:  MOVLW  FF
+016A:  MOVWF  08
+016C:  RCALL  002C
+....................    }; 
+016E:  BRA    0150
+.................... } 
+....................  
+.................... //--------------------------------------------------------------------------------- 
+0170:  SLEEP 
+
+Configuration Fuses:
+   Word  1: CE23   PLL4 CPUDIV1 USBDIV HSPLL FCMEN IESO
+   Word  2: 1E38   PUT NOBROWNOUT BORV20 VREGEN NOWDT WDT32768
+   Word  3: 8700   CCP2C1 PBADEN LPT1OSC MCLR
+   Word  4: 00A1   STVREN NOLVP ICPRT NOXINST NODEBUG
+   Word  5: C00F   NOPROTECT NOCPB NOCPD
+   Word  6: E00F   NOWRT NOWRTC NOWRTB NOWRTD
+   Word  7: 400F   NOEBTR NOEBTRB
